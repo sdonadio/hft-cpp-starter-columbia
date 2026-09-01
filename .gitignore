@@ -1,0 +1,9 @@
+# build & autograder artifacts
+report.json
+_*
+*.o
+*.out
+build/
+scratch/
+tail_fixed*
+.DS_Store

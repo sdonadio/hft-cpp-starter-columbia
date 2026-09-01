@@ -1,0 +1,26 @@
+name: autograde
+on:
+  push:
+  pull_request:
+  workflow_dispatch:        # lets you (or students) trigger a run manually
+
+jobs:
+  autograde:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain (g++ + ThreadSanitizer + cmake + python)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends g++ libtsan0 cmake python3
+
+      - name: Run autograder
+        run: python3 tests/run_ci.py
+
+      - name: Upload report.json
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: report.json
