@@ -71,8 +71,25 @@ That allocator time under a function that "just averages numbers" is the
 smoking gun. For a flame graph, fold the stacks:
 
 ```bash
-perf script | stackcollapse-perf.pl | flamegraph.svg > /tmp/tail.svg   # Brendan Gregg's tools
+perf script | stackcollapse-perf.pl | flamegraph.pl > /tmp/tail.svg   # Brendan Gregg's tools
 ```
+
+`flamegraph.pl` is the *script* that turns folded stacks into the SVG —
+`flamegraph.svg` is what comes out the other end. Clone
+`github.com/brendangregg/FlameGraph` and put both `.pl` files on your `PATH`.
+
+> **Profiling your bot instead of `tail`?** `hft_bot --replay` takes **no file
+> argument** — it reads one `book_snapshot` JSON per line on **stdin** and writes
+> one response line back. That is exactly how the grading harness drives it
+> (`python scripts/latency_replay.py --latest --cmd './build/hft_bot --replay'`).
+> To hold it under `perf`, make a tape first and redirect it in:
+>
+> ```bash
+> jq -c 'select(.msg.type=="book_snapshot").msg' \
+>    sessions/session_*.jsonl > /tmp/tape.jsonl      # unwrap the recording
+> perf stat -d   ./build/hft_bot --replay < /tmp/tape.jsonl
+> perf record -g ./build/hft_bot --replay < /tmp/tape.jsonl
+> ```
 
 > No `perf`/FlameGraph (macOS, restricted VM)? Use `valgrind --tool=callgrind
 > ./tail` + `callgrind_annotate`, or Instruments' *Allocations* +
