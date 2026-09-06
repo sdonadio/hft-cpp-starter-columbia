@@ -77,6 +77,10 @@ STACK OF 1 INSTANCE OF 'ROOT LEAK: <malloc in handle_raw(double)>':
     1 (32 bytes) ROOT LEAK: <malloc in handle_raw(double) 0x...> [32]
 ```
 
+`leaks` also prints `Process NNNNN is not debuggable. Due to security
+restrictions...` and a short crash-report-style header. Ignore both — they are
+normal on macOS and the leak report underneath them is still correct.
+
 32 bytes, not 16: `malloc` rounds up to its size class. Two things to know about
 `leaks`: it is **conservative** — it scans the stack and registers for anything
 that *looks* like a pointer, so a stale copy of the leaked pointer left in a dead
