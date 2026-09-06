@@ -49,7 +49,7 @@ g++ -std=c++17 -O2 -Itests scratch/perf.cpp -o /tmp/perf && /tmp/perf
 Try it once *without* `doNotOptimize` — watch the time collapse to ~0. That's
 the optimizer, not speed. This is why `bench.hpp` ships those two helpers.
 
-### 2. Stack vs heap
+### 2. Stack vs heap — and the sink that makes it honest
 Allocation is not free. The stack is a pointer bump; the heap is a call into
 the allocator. Time both:
 
@@ -57,22 +57,46 @@ the allocator. Time both:
 // stack: lives in the current frame, freed by returning
 auto stack_ns = ns_per_op([]{
     int buf[64];
-    buf[0] = 7; doNotOptimize(buf[0]);
+    buf[0] = 7; doNotOptimize(buf);      // sink the ARRAY, not buf[0]
 }, 20'000'000);
 
 // heap: new/delete every iteration
 auto heap_ns = ns_per_op([]{
     int* p = new int[64];
-    p[0] = 7; doNotOptimize(p[0]);
+    p[0] = 7; doNotOptimize(p);          // sink the POINTER, not p[0]
     delete[] p;
 }, 20'000'000);
-printf("stack=%.2f ns  heap=%.2f ns\n", stack_ns, heap_ns);
+printf("stack=%.2f ns  heap=%.2f ns  (%.1fx)\n",
+       stack_ns, heap_ns, heap_ns / stack_ns);
 ```
 
-The heap is typically **10–50×** slower. The **why for HFT**: an allocation on
-the tick-to-trade path is an unbounded call that can also fault or lock — it
-poisons your p99.9. That observation is the whole point of the `Pool`
-challenge (HW4): pre-allocate once, hand out slots in O(1).
+Measured on an Apple M-series laptop, `clang++ -std=c++17 -O2`:
+
+```text
+stack=0.23 ns  heap=12.33 ns  (53.5x)
+```
+
+**Sink the pointer, not the value.** If you write `doNotOptimize(p[0])` you have
+only told the compiler "the `int` I loaded must escape" — nothing at all keeps
+the *allocation* alive, and C++14 explicitly permits an implementation to elide
+a matched `new`/`delete` pair whose storage never escapes. clang takes that
+permission: the same benchmark then reports **stack 0.45 ns vs heap 0.52 ns,
+about 1.2×**, and you would "measure" a heap allocation as cheaper than an L1
+hit. Passing `p` itself makes the *address* escape, so the allocation has to
+really happen, and the honest 50× shows up. The rule generalises: your sink
+must protect the thing whose cost you are trying to measure — for an allocator
+that is the pointer, not the bytes behind it.
+
+Two sanity checks worth doing now: drop `doNotOptimize` entirely and the loop
+reports **0.00 ns/op**; rebuild both variants at `-O0` and you get **13.4 vs
+1.7 ns, only ~8×** — a debug build does not reveal the truth, it hides a 50×
+effect behind an 8× one. If a number is faster than an L1 hit (~1 ns), it is
+not a number.
+
+The **why for HFT**: an allocation on the tick-to-trade path is an unbounded
+call that can also fault or lock — it poisons your p99.9. That observation is
+the whole point of the `Pool` challenge (HW4): pre-allocate once, hand out
+slots in O(1).
 
 ### 3. Cache-friendly vs pointer-chasing
 Same amount of data, same sum — only the *memory layout* differs.
