@@ -7,3 +7,6 @@ build/
 scratch/
 tail_fixed*
 .DS_Store
+
+# arena C++ client build tree
+hft/cpp_client/build/
