@@ -238,6 +238,11 @@ void ArenaClient::dispatch(const std::string& raw) {
                         m.value("queue_ahead", 0), m.value("level_qty", 0));
 
     } else if (type == "error") {
+        // Always surface server errors: with a bad token the venue answers
+        // AUTH_FAILED and closes, and "connection closed (1000)" alone sends
+        // students hunting a network problem that is a config problem.
+        std::cerr << "[arena] server error " << m.value("code", "")
+                  << ": " << m.value("message", "") << "\n";
         on_error(m.value("code", ""), m.value("message", ""));
 
     }
