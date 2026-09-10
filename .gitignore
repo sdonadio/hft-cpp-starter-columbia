@@ -1,12 +1,13 @@
-# build & autograder artifacts
-report.json
-_*
-*.o
-*.out
-build/
-scratch/
-tail_fixed*
-.DS_Store
 
 # arena C++ client build tree
+# build & autograder artifacts
+*.o
+*.out
+.DS_Store
+.env
+_*
+build/
 hft/cpp_client/build/
+report.json
+scratch/
+tail_fixed*

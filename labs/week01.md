@@ -56,13 +56,32 @@ cmake --build build     # -> build/hft_bot
 
 For TLS venues (`wss://`) add `-DHFT_USE_TLS=ON` to the configure step.
 
-### 3. Connect and get on the LATENCY board
-Point the bot at the class exchange and run it:
+### 3. Register your team, then connect and get on the LATENCY board
+Registration is a one-time step per team. It needs the class registration code
+(on the board / on Ed) and a team name; it writes your secret token to `.env`
+in the repo root. Never commit `.env`.
 
 ```bash
-TEAM_ID=<your_team> EXCHANGE_HOST=<arena_host> EXCHANGE_PORT=<port> ./build/hft_bot
+python3 scripts/register.py --arena https://algoarenafin.duckdns.org \
+        --code <class code> --name "Your Team Name"
+# -> Registered team 'Your Team Name'. traders ['your_team_name_trader_1'] ...
+#    .env now holds ARENA_TOKEN, TEAM_ID and EXCHANGE_URL (wss://feed.…)
+```
+
+Then run the bot with those credentials (`run_bot.sh` loads `.env`):
+
+```bash
+./run_bot.sh
+# [arena] connected to wss://feed.algoarenafin.duckdns.org as your_team_name_trader_1 (trader)
+# [session] FEE_SCHEDULE — taker 30.0 bps, maker rebate 5.0 bps
 # waits for SESSION_OPEN, then trades; prints:  [latency] tick->order = N us
 ```
+
+`TEAM_ID` is a **bot id** (`<team slug>_trader_1`), not the team name — the
+registration output lists yours. Teammates share the same `.env`; a second
+seat is `TEAM_ID=<other bot id> ./run_bot.sh`. If the exchange answers
+`AUTH_FAILED`, the token in `.env` does not match: re-register under a new
+team name or ask me to regenerate yours.
 
 The one hook that matters is the hot path:
 

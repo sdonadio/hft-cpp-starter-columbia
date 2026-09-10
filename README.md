@@ -57,3 +57,14 @@ each stub's comments); keep the signatures as given.
 A C++17 compiler (`g++`/`clang++`), `cmake` (for the arena client), `python3`,
 and — for local runs — `perf`/ThreadSanitizer where a challenge asks for them.
 CI installs all of this for you.
+
+## Connecting to the class arena
+
+```bash
+make client                                   # builds hft/cpp_client/build/hft_bot (TLS on)
+make register CODE=<class code> NAME="Team"   # one-time: writes .env (token, TEAM_ID, EXCHANGE_URL)
+make run                                      # starts your bot with .env
+```
+
+`.env` is your team's secret token — it is git-ignored; never paste it in Ed or commit it.
+Dashboard: https://algoarenafin.duckdns.org (MARKET · FLOW · LATENCY).
