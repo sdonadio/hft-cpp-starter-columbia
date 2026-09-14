@@ -68,3 +68,27 @@ make run                                      # starts your bot with .env
 
 `.env` is your team's secret token — it is git-ignored; never paste it in Ed or commit it.
 Dashboard: https://algoarenafin.duckdns.org (MARKET · FLOW · LATENCY).
+
+## Latency benchmark (Project Phase 0 and every phase after)
+
+Two stdlib-only Python tools, used by the Phase 0 deliverable:
+
+```bash
+# Offline, reproducible: a fixed synthetic tape (seed 12345) is piped through
+# your bot over stdin/stdout and every tick-to-order is clocked.
+python3 scripts/latency_replay.py --self-test --cmd "hft/cpp_client/build/hft_bot --replay"
+
+# Live: your bot prints one "LAT <symbol> <micros>" line per book update to
+# stderr. Capture it, then rank/summarise the tail.
+make run 2> logs/lat_live.log      # Ctrl-C after a few minutes
+python3 scripts/latency_report.py logs/lat_live.log
+```
+
+The **offline p50 / p99 / p99.9 from `latency_replay.py` are the official
+numbers** you report in each phase: everyone runs the same tape on their own
+machine, so a phase's "measured improvement" is your new offline numbers against
+your Phase 0 offline baseline. The live LATENCY board is for visibility and
+sanity (it moves with the market and is not reproducible); it is not graded by
+rank. `--self-test` alone (no `--cmd`) benchmarks a built-in Python echo bot so
+you can check the harness before your client builds. Pass a recorded
+`sessions/session_*.jsonl` file instead of `--self-test` if one is provided.
