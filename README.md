@@ -9,7 +9,7 @@ collaborator.
 ```
 include/     ← the header STUBS you implement (one per challenge — start here)
 tests/       ← the autograder (do not edit): drivers + bench.hpp + run_ci.py
-starters/    ← provided code you build on (hw13 kernel, hw14 tail)
+starters/    ← provided code you build on (hw02 bench, hw13 kernel, hw14 tail)
 project/     ← the 8-phase AlgoArena project (README + phase checklist)
 labs/        ← the in-class lab guides (week01 … week15)
 docs/        ← how to get & build the arena C++ client
@@ -33,6 +33,7 @@ make test          # = python3 tests/run_ci.py  (grades whatever you've implemen
 
 | HW | File to implement | What it checks |
 |----|-------------------|----------------|
+| 2  | `starters/hw02/hw2.cpp` | swap by ref/ptr; by-value vs `const&` copy cost; contiguous vs pointer-chase (hand-graded, see its README) |
 | 4  | `include/pool.hpp` | O(1) pool alloc/free, placement new, ns/alloc |
 | 7  | `include/order_book.hpp` | flat book best bid/ask + cancel; symbol map; ns/op |
 | 8  | `include/rolling_counter.hpp` | sliding-window count + expiry; ns/op |
@@ -45,6 +46,10 @@ make test          # = python3 tests/run_ci.py  (grades whatever you've implemen
 Each stub compiles but fails its tests until you implement it — that's your
 red/green signal. The exact interface is fixed by the autograder (and repeated in
 each stub's comments); keep the signatures as given.
+
+**HW 2 is the exception: it is hand-graded on CourseWorks, not by CI.** It ships
+its own percentile harness and its own `make`; you submit `hw2.cpp` plus a short
+write-up. See `starters/hw02/README.md`.
 
 ## Project
 
