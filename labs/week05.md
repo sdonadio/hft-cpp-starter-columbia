@@ -10,6 +10,14 @@ compile-time branching with `if constexpr` / SFINAE. The payoff for HFT is one
 dispatch at runtime. This is the groundwork for **HW5** and for the compile-time
 message codec you build in Week 6.
 
+> **Where this sits.** Session 5 = **templates & generic programming +
+> compile-time & policy-based design + CRTP** — this lab is the templates half;
+> the `constexpr`/policy/CRTP half is the Week 6 lab, which you run in the same
+> stretch of the course. *Runtime* polymorphism — inheritance, `virtual`,
+> vtable/vptr, virtual destructors, the hot-path cost of a virtual call, `final` —
+> was **Session 4** (see the Week 4 lab, steps 7–10). Here we assume you have
+> measured that cost and we remove it.
+
 ## Setup
 No stub for this week — we work in a scratch file and lean on the STL.
 ```bash
@@ -32,8 +40,8 @@ T max_of(T a, T b) { return a < b ? b : a; }
 ```
 `max_of(3, 4)` stamps out an `int` version; `max_of(1.5, 2.5)` stamps a `double`
 version. Both are as fast as if you'd hand-written them — **the template is
-resolved and inlined at compile time**. There is no runtime cost, no vtable, no
-type tag. Verify with `-O2 -S` that the call vanishes into a `cmov`.
+resolved and inlined at compile time**. There is no runtime cost, no vtable (you
+measured what one costs in the Week 4 lab), no type tag. Verify with `-O2 -S` that the call vanishes into a `cmov`.
 
 ### 2. A tiny generic container
 ```cpp
@@ -136,4 +144,4 @@ make test
 ```
 
 ## Links
-Week-5 deck · HW5 · (feeds the Week-6 compile-time codec, Project **Phase 1**).
+Week-5 deck · HW5 · Week-4 lab steps 7–10 (runtime polymorphism, the thing templates replace) · (feeds the Week-6 compile-time codec, Project **Phase 1**).

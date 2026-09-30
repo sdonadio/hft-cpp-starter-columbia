@@ -23,7 +23,10 @@ g++ -std=c++17 -O2 /tmp/w6.cpp -o /tmp/w6 && /tmp/w6
 
 ## Walk-through — we build this together
 
-### 1. The virtual version (the thing we're replacing)
+### 1. Recap: the virtual version (you wrote this in the Week 4 lab)
+Runtime polymorphism was Session 4 — inheritance, `virtual`, the vptr/vtable, a
+virtual destructor, and the ns/call you measured for direct vs virtual vs `final`.
+Same shape here, so you can port it in one sitting:
 ```cpp
 struct IStrategy {
     virtual double signal(double mid, double obi) = 0;
@@ -33,10 +36,9 @@ struct Momentum : IStrategy {
     double signal(double mid, double obi) override { return obi * 0.5; }
 };
 ```
-Every `strat->signal(...)` is an **indirect call through a vtable**: load the
-vtable pointer, load the slot, call. The compiler can't inline across it, and the
-indirect branch can mispredict. Fine for cold configuration code — a tax you don't
-want per tick.
+Recall the bill: an indirect call through the vtable, no inlining across it, and a
+BTB mispredict when the target varies (about 5 ns vs 0.7 ns on the M4 in the
+Week 4 lab). **Keep your HW 4 numbers open — we are about to beat them.**
 
 ### 2. CRTP — static polymorphism, no vtable
 The derived type is a **template parameter of the base**, so the base can call
@@ -56,7 +58,8 @@ struct Momentum : Strategy<Momentum> {
 no vtable pointer, no indirect call, and `signal_impl` **inlines** straight into
 the caller. Same "override a hook" ergonomics, zero dispatch cost. Confirm with
 `-O2 -S`: the CRTP call becomes a plain multiply; the virtual one keeps the
-indirect `call`.
+indirect `call`. Now port **your HW 4 `Strategy`** the same way and re-run your
+HW 4 benchmark against it — that comparison is the HW 6 CRTP task.
 ```cpp
 Momentum m;
 double s = m.signal(100.0, 0.8);   // inlined to obi*0.5
@@ -144,7 +147,7 @@ branch inlines.
    `[](auto&){}`-free so a missing handler fails to compile).
 3. Give `Quoter` a second policy axis (a `SkewPolicy`) and instantiate two
    configurations.
-4. This is **HW6**: demonstrate static vs dynamic dispatch (show the `-O2 -S`
+4. This is **HW6**: port your HW 4 virtual `Strategy` to CRTP and compare ns/call against your HW 4 numbers; demonstrate static vs dynamic dispatch (show the `-O2 -S`
    difference) and wire the `variant`+visitor codec into your bot's message
    handling for **Phase 1**.
 
