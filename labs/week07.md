@@ -19,7 +19,7 @@ mostly done.
 
 ## Setup
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 cat include/order_book.hpp     # the stub + the contract in the comments
 sed -n '1,45p' tests/book_test.cpp   # read the tests you must pass (do NOT edit)
 make book                      # compiles + runs; fails until we implement

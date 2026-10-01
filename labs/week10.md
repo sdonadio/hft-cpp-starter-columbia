@@ -14,7 +14,7 @@ grader's cross-thread stress + TSan runs.
 
 ## Setup
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 make spsc          # builds tests/spsc_correctness.cpp against your header — RED right now
 ```
 Open two files side by side:

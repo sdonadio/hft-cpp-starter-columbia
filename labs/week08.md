@@ -17,7 +17,7 @@ lab **is** the HW8 challenge.
 
 ## Setup
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 cat include/rolling_counter.hpp             # stub + contract
 sed -n '1,40p' tests/rolling_counter_test.cpp   # the tests (do NOT edit)
 make rolling                                # fails until implemented

@@ -107,7 +107,7 @@ arb isn't worth a scarce message.
 `EXCHANGE_URLS` (comma-separated, multi-venue) is **Python-only**
 (`broker/config.py`, `trader/arb_trader.py`). The C++ client reads
 `EXCHANGE_URL`, or `EXCHANGE_HOST` + `EXCHANGE_PORT`, **once** at startup
-(`ClientConfig::from_env()` in `include/arena_client.hpp`) and speaks to exactly
+(`ClientConfig::from_env()` in `hft/cpp_client/include/arena_client.hpp`) and speaks to exactly
 one venue. Setting `EXCHANGE_URLS` on `hft_bot` does nothing. So run **two**:
 
 ```bash

@@ -15,7 +15,7 @@ call costs before you put one there.**
 
 ## Setup
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 make pool          # builds tests/pool_test.cpp against include/pool.hpp, runs it
 ```
 Right now the stub compiles but every test fails — `alloc()` returns `nullptr`.

@@ -86,7 +86,7 @@ team name or ask me to regenerate yours.
 The one hook that matters is the hot path:
 
 ```cpp
-// include/hft_bot.hpp — you override this
+// hft/cpp_client/include/hft_bot.hpp — you override this
 void on_book(const std::string& sym, double bid, double ask,
              double mid, double microprice, double obi) override {
     // decision goes here; orders sent from here are latency-stamped for you

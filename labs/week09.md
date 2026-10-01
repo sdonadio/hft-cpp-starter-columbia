@@ -14,7 +14,7 @@ ring** (`include/spsc_ring.hpp`, HW10/Phase 3). This lab leads into HW9.
 We write throwaway `.cpp` files this week (no stub to fill yet). Use the same
 toolchain flags the grader uses:
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 mkdir -p /tmp/w9
 # compiler flags mirror the Makefile / CI:
 #   normal:  -std=c++17 -O2 -pthread

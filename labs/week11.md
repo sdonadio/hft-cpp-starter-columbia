@@ -14,7 +14,7 @@ Then a few short **demos** (TCP vs UDP, a non-blocking read loop, a targeted JSO
 
 ## Setup
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 make fix           # builds tests/fix_test.cpp against your header — RED right now
 make u64toa        # builds tests/u64toa_test.cpp against your header — RED right now
 ```

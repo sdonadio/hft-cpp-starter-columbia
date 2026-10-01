@@ -23,7 +23,7 @@ and nothing is decided at runtime.
 One scratch file for the whole lab; we grow it step by step. Compile after every
 step, because template errors are much cheaper to read one change at a time.
 ```bash
-cd project-starter
+cd hft-cpp-starter-columbia   # the root of YOUR clone of the starter (has Makefile, include/, tests/)
 cat > /tmp/w5.cpp <<'EOF2'
 #include <cstdio>
 int main() { std::puts("session5 scratch"); return 0; }
